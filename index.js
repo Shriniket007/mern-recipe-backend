@@ -23,13 +23,21 @@ app.use("/auth", userRouter);
 
 app.use("/recipes", recipesRouter);
 
-mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true
-});
+const connectDB = async () => {
+    try {
+      const conn = await mongoose.connect(process.env.MONGO_URL);
+      console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } catch (error) {
+      console.log(error);
+      process.exit(1);
+    }
+  }
 
 
 
-app.listen(PORT, () => {
-    console.log("server started");
-})
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log("listening for requests");
+    })
+  })
 
